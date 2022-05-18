@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/models/transaction.dart';
+import 'package:flutter_complete_guide/widgets/chart.dart';
 import 'package:flutter_complete_guide/widgets/new_transaction.dart';
 import 'package:flutter_complete_guide/widgets/transaction_list.dart';
 
@@ -14,6 +15,14 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.purple,
         accentColor: Colors.amber,
         fontFamily: 'Quicksand',
+        // Replaces default textTheme styling for headline 6 which was Quicksand
+        textTheme: ThemeData.light().textTheme.copyWith(
+              headline6: TextStyle(
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
         appBarTheme: AppBarTheme(
           titleTextStyle: TextStyle(
             fontFamily: 'OpenSans',
@@ -35,55 +44,65 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transactions = [
-    Transaction(
-      id: "1",
-      title: "New shoes",
-      amount: 69,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: "2",
-      title: "Valorant knife",
-      amount: 10,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: "3",
-      title: "Badminton string",
-      amount: 19,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: "4",
-      title: "Badminton shuttle",
-      amount: 40,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: "5",
-      title: "Badminton court",
-      amount: 15,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: "6",
-      title: "Cruise",
-      amount: 500,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: "7",
-      title: "UST",
-      amount: 2000,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: "8",
-      title: "Etoro",
-      amount: 15000,
-      date: DateTime.now(),
-    ),
+    // Transaction(
+    //   id: "1",
+    //   title: "New shoes",
+    //   amount: 69,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: "2",
+    //   title: "Valorant knife",
+    //   amount: 10,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: "3",
+    //   title: "Badminton string",
+    //   amount: 19,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: "4",
+    //   title: "Badminton shuttle",
+    //   amount: 40,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: "5",
+    //   title: "Badminton court",
+    //   amount: 15,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: "6",
+    //   title: "Cruise",
+    //   amount: 500,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: "7",
+    //   title: "UST",
+    //   amount: 2000,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: "8",
+    //   title: "Etoro",
+    //   amount: 15000,
+    //   date: DateTime.now(),
+    // ),
   ];
+
+  List<Transaction> get _recentTransactions {
+    return _transactions.where((tx) {
+      return tx.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
 
   void _addNewTransaction(String title, double amount) {
     final newTransaction = new Transaction(
@@ -126,10 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // mainAxisAlignment: MainAxisAlignment.spaceAround,
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: Card(color: Colors.blue, child: Text('Chart!')),
-            ),
+            Chart(_recentTransactions),
             TransactionList(_transactions),
           ],
         ),
